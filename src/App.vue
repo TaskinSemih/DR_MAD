@@ -7,6 +7,7 @@
       </template>
     </NavBar>
     <button v-if="!isEmpty(shopUser)" @click="logoutUser">Logout</button>
+    <button v-if="isEmpty(shopUser)" @click="logoutUser">Login</button>
     <router-view/>
     <div style="color: aliceblue">
       <p v-if="shopUser"> {{ shopUser.login }}</p>
@@ -35,8 +36,7 @@ export default {
       } else {
         return [
           {label: 'Boutique', to: '/shop'},
-          {label: 'Compte bancaire', to: '/bank'},
-          {label: 'Login', to: '/shop/login'}
+          {label: 'Compte bancaire', to: '/bank'}
         ]
       }
     }
