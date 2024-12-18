@@ -1,126 +1,103 @@
-button, input[type=number], input[type=text] {
-    padding: 5px;
-    background-color: #000;
-    color: #0f0
-}
-
-h1, input[type=number], label, p, span, td, th {
-    color: #0f0
-}
-
-button, input[type=text] {
-    border: 1px solid #0f0;
-    margin: 5px 0;
-    border-radius: 3px
-}
-
-button:hover {
-    background-color: #007f00
-}
-
+/* Global */
 body {
-    background-color: #000;
-    font-family: 'Courier New', monospace;
-    padding: 20px
-}
-
-h1 {
-    color: #00ff00;
-    font-size: 24px
-}
-
-p {
-    margin: 10px 0
-}
-
-hr {
-    border: 0;
-    border-top: 1px solid #0f0
-}
-
-input[type=checkbox] {
-    transform: scale(1.2);
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-    appearance: none;
-    background-color: #000;
-    border: 2px solid #0f0;
-    border-radius: 3px;
-    cursor: pointer
-}
-
-input[type=checkbox]:checked {
-    background-color: #0f0;
-    border: 2px solid #0f0
-}
-
-input[type=checkbox]:focus {
-    outline: 0;
-    box-shadow: 0 0 3px rgba(0, 255, 0, .7)
-}
-
-input[type=number] {
-    font-size: 16px;
-    border: 2px solid #0f0;
-    border-radius: 3px;
-    width: 100px;
-    height: 30px
-}
-
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    background-color: #000;
-    color: #0f0;
-    font-size: 12px;
-    width: 20px;
-    height: 30px;
-    border: 2px solid #0f0;
-    border-radius: 3px;
-    cursor: pointer
+    padding: 20px;
 }
 
-input[type=number]::-webkit-inner-spin-button:hover, input[type=number]::-webkit-outer-spin-button:hover {
-    background-color: #0f0;
-    border: 2px solid #0f0;
-    color: #000
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 10px
-}
-
-td, th {
-    border: 1px solid #0f0;
-    padding: 8px;
-    text-align: left
-}
-
-th {
-    background-color: #0f0;
-    color: #000
-}
-
-tr {
+/* Typographie */
+h1 {
+    color: #007bff;
+    font-size: 28px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
-tr:nth-child(2n) {
-    background-color: #111
-}
-
-#app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Inconsolata', monospace;
-    background-size: cover
+p, label {
+    color: #555;
+    margin: 10px 0;
 }
 
 a {
-    color: #0f0
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+button {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    accent-color: #007bff;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* Container */
+#app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

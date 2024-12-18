@@ -151,42 +151,66 @@ export default {
 };
 </script>
 <style scoped>
-
+/* Boutons */
 button {
-  background-color: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  padding: 5px;
+  background-color: #007bff; /* Bleu principal */
+  color: #fff; /* Texte blanc */
+  border: 1px solid #007bff;
+  padding: 10px;
   margin: 5px 0;
-  border-radius: 3px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #007f00;
+  background-color: #0056b3; /* Bleu plus foncé */
 }
 
+/* Checkbox */
 input[type="checkbox"] {
   transform: scale(1.2);
   margin-right: 10px;
   width: 20px;
   height: 20px;
   appearance: none;
-  background-color: #000;
-  border: 2px solid #00ff00;
+  background-color: #fff;
+  border: 2px solid #007bff;
   border-radius: 3px;
   cursor: pointer;
 }
 
 input[type="checkbox"]:checked {
-  background-color: #00ff00;
-  border: 2px solid #00ff00;
+  background-color: #007bff;
+  border: 2px solid #007bff;
 }
 
 input[type="checkbox"]:focus {
   outline: none;
-  box-shadow: 0 0 3px rgba(0, 255, 0, 0.7);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+/* Inputs (text & number) */
+input[type="text"],
+input[type="number"] {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Table */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -195,145 +219,53 @@ table {
 
 th,
 td {
-  border: 1px solid #00ff00;
-  padding: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
-  color: #00ff00;
+  color: #333;
 }
 
 th {
-  background-color: #00ff00;
-  color: #000;
+  background-color: #007bff;
+  color: #fff;
 }
 
 tr:nth-child(even) {
-  background-color: #111;
+  background-color: #f2f2f2;
 }
 
-span {
-  color: #00ff00;
+tr:hover {
+  background-color: #e9ecef;
+  transition: background-color 0.3s ease;
 }
 
-body {
-  background-color: #000;
-  color: #00ff00;
-  font-family: 'Courier New', monospace;
-  padding: 20px;
-}
-
+/* Texte */
 h1 {
-  color: #00ff00;
-  font-size: 24px;
+  color: #007bff;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-p {
-  margin: 10px 0;
-  color: #00ff00;
+p,
+label,
+span {
+  color: #555;
 }
 
+/* Séparateur */
 hr {
   border: 0;
-  border-top: 1px solid #00ff00;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
 }
 
-label {
-  color: #00ff00;
-}
-
-
-input[type="checkbox"] {
-  transform: scale(1.2);
-  margin-right: 10px;
-  width: 20px;
-  height: 20px;
-  appearance: none;
-  background-color: #000;
-  border: 2px solid #00ff00;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-input[type="checkbox"]:checked {
-  background-color: #00ff00;
-  border: 2px solid #00ff00;
-}
-
-input[type="checkbox"]:focus {
-  outline: none;
-  box-shadow: 0 0 3px rgba(0, 255, 0, 0.7);
-}
-
-
-input[type="text"] {
-  background-color: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 3px;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  appearance: none;
+/* Conteneur principal */
+body {
+  background-color: #f8f9fa;
+  color: #333;
+  font-family: 'Arial', sans-serif;
   margin: 0;
-}
-
-input[type="number"] {
-  background-color: #000;
-  color: #00ff00;
-  font-size: 16px;
-  padding: 5px;
-  border: 2px solid #00ff00;
-  border-radius: 3px;
-  width: 100px;
-  height: 30px;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  background-color: #000;
-  color: #00ff00;
-  font-size: 12px;
-  width: 20px;
-  height: 30px;
-  border: 2px solid #00ff00;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-input[type="number"]::-webkit-outer-spin-button:hover,
-input[type="number"]::-webkit-inner-spin-button:hover {
-  background-color: #00ff00;
-  border: 2px solid #00ff00;
-  color: #000;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 10px;
-}
-
-th,
-td {
-  border: 1px solid #00ff00;
-  padding: 8px;
-  text-align: left;
-  color: #00ff00;
-}
-
-th {
-  background-color: #00ff00;
-  color: #000;
-}
-
-tr:nth-child(even) {
-  background-color: #111;
-}
-
-span {
-  color: #00ff00;
+  padding: 20px;
 }
 </style>

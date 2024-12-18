@@ -1,22 +1,32 @@
 <template>
-  <div>
-    <input type="text" v-model="orderId" placeholder="Enter order id">
-    <button @click="payOrder">Payer</button>
-    <!--    <input type="text" placeholder="Entrez l'id de la transaction">-->
-    <!--    <button @click="verifyPayment">Vérifier</button>-->
+  <div class="pay-container">
+    <h1 class="title">Paiement de la Commande</h1>
+
+    <form @submit.prevent="payOrder" class="form">
+      <!-- Input pour l'ID de commande -->
+      <div class="form-group">
+        <label for="orderId">ID de la commande</label>
+        <input
+          id="orderId"
+          v-model="orderId"
+          type="text"
+          placeholder="Entrez l'ID de la commande"
+        />
+      </div>
+
+      <!-- Bouton Payer -->
+      <button type="submit" class="btn">Payer</button>
+    </form>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'ShopPay',
-  // [Vue warn]: Computed property "orderId" was assigned to but it has no setter
-  // je dois utiliser data au lieu de computed sinon rip
+  name: "ShopPay",
   data() {
     return {
-      orderId: this.$route.params.orderId || '',
-    }
+      orderId: this.$route.params.orderId || "",
+    };
   },
   computed: {
     orderIndex() {
@@ -25,43 +35,79 @@ export default {
     orders() {
       return this.$store.state.shop.shopUser.orders;
     },
-    transactions() {
-      return this.$store.state.bank.accountNumber.transactions;
-    },
-    shopAccountNumber() {
-      return this.$store.state.bank.accountNumber;
-    },
   },
   methods: {
     payOrder() {
-      console.log('je paye la commande');
-      this.orders[this.orderIndex].status = 'finalized';
-      alert('Commande payée ' + this.orderId);
-      this.orderId = '';
+      console.log("je paye la commande");
+      this.orders[this.orderIndex].status = "finalized";
+      alert("Commande payée " + this.orderId);
+      this.orderId = "";
     },
-    verifyPayment() {
-      const order = this.orders.find(order => order.id === this.orderId);
-
-      if (!this.transactions) {
-        alert('No transaction found with this uuid');
-        return;
-      }
-
-      if (this.transactions.amount !== order.amount) {
-        alert('The transaction amount does not match the order amount');
-        return;
-      }
-
-      if (this.transactions.account !== this.shopAccountNumber) {
-        alert('The recipient is not the shop account number');
-        return;
-      }
-
-      alert('Payment verification successful');
-    },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
+/* Container */
+.pay-container {
+  max-width: 500px;
+  margin: 5% auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
 </style>

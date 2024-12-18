@@ -119,15 +119,15 @@ export default {
 </script>
 <style scoped>
 input[type="date"] {
-  background-color: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
+  background-color: #eaeaea;
+  color: #007bff;
+  border: 1px solid #007bff;
   padding: 5px;
   margin: 5px 0;
   border-radius: 3px;
 }
 
 label {
-  color: #00ff00;
+  color: #007bff;
 }
 </style>

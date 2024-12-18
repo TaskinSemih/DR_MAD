@@ -1,86 +1,105 @@
 <template>
-  <div class="center">
-    <h1>Login</h1>
+  <div class="login-container">
+    <h1 class="title">Login</h1>
 
-    <span>login</span><input v-model="login">
-    <span>password</span><input v-model="password">
-    <button @click="shopLogin({login, password})">Login</button>
+    <div class="form-group">
+      <label for="login">Login</label>
+      <input id="login" v-model="login" type="text" placeholder="Enter your login" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" v-model="password" type="password" placeholder="Enter your password" />
+    </div>
+
+    <button @click="shopLogin({ login, password })" class="btn">Login</button>
   </div>
-
 </template>
 
 <script>
-
-import {mapState, mapActions} from 'vuex'
+import { mapState, mapActions } from "vuex";
 
 export default {
-  name: 'ShopLoginView',
+  name: "ShopLoginView",
   data: () => ({
-    login: '',
-    password: '',
+    login: "",
+    password: "",
   }),
   computed: {
     ...mapState({
-      shopUser: (state) => state.shopUser
+      shopUser: (state) => state.shopUser,
     }),
   },
   methods: {
     ...mapActions({
-      shopLogin: 'shopLogin'
+      shopLogin: "shopLogin",
     }),
-  }
-}
+  },
+};
 </script>
+
 <style scoped>
-
-body {
-  background-color: #000;
-  color: #00ff00;
-  font-family: 'Courier New', monospace;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+/* Container */
+.login-container {
+  max-width: 400px;
+  margin: 5% auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-h1 {
-  font-size: 24px;
+/* Title */
+.title {
+  font-size: 28px;
+  margin-bottom: 1.5rem;
+  color: #007bff;
 }
 
-span {
+/* Form group */
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+label {
   display: block;
-  margin-top: 10px;
-  color: #00ff00;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: bold;
 }
 
 input {
-  background-color: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 3px;
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
-button {
-  background-color: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 3px;
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-button:hover {
-  background-color: #007f00;
+/* Button */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-p {
-  color: #00ff00;
-  margin-top: 10px;
+.btn:hover {
+  background-color: #0056b3;
 }
-
-
 </style>
