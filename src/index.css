@@ -118,7 +118,6 @@ tr:nth-child(2n) {
     flex-direction: column;
     align-items: center;
     font-family: 'Inconsolata', monospace;
-    background-image: url(@/assets/black_man_laughing_in_the_dark.jpg);
     background-size: cover
 }
 
