@@ -107,7 +107,7 @@ let shopusers = [
         "_id": "654512870a4bd1c34897418e",
         "name": "doctor mad",
         "login": "drmad",
-        "password": "$2a$10$UwJos/mn1QQ3crdmKYNpu.qPXRHcXDRtlv3PWM3fj4/a/TbrYaXtS",
+            "password": "$2a$10$UwJos/mn1QQ3crdmKYNpu.qPXRHcXDRtlv3PWM3fj4/a/TbrYaXtS",
         "email": "drmad@bad.org",
         "orders": [{
             "items": [{

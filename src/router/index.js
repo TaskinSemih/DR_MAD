@@ -30,6 +30,11 @@ const routes = [
                 component: () => import('../views/ShopLoginView.vue')
             },
             {
+                path: 'logout',
+                name: 'shoplogout',
+                component: () => import('../views/ShopLoginView.vue')
+            },
+            {
                 path: 'orders',
                 name: 'shoporders',
                 component: () => import('../views/ShopOrders.vue')

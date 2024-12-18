@@ -4,15 +4,12 @@
       <template v-slot:nav-button="{ label }">
         <span v-if="label === 'Boutique'"><strong>{{ label }}</strong></span>
         <img v-else-if="label === 'Compte bancaire'" src="@/assets/bank-icon.jpg" alt="Bank" style="width: 20px">
+        <span v-else-if="label === 'Logout'" @click="logoutUser">Logout</span>
       </template>
     </NavBar>
-    <button v-if="!isEmpty(shopUser)" @click="logoutUser">Logout</button>
-    <button v-if="isEmpty(shopUser)" @click="logoutUser">Login</button>
+
     <router-view/>
-    <div style="color: aliceblue">
-      <p v-if="shopUser"> {{ shopUser.login }}</p>
-      <p v-else> Log or get out</p>
-    </div>
+
   </div>
 </template>
 
@@ -28,15 +25,16 @@ export default {
       shopUser: state => state.shop.shopUser,
     }),
     links() {
-      if (!this.isEmpty(this.shopUser)) {
+      if (this.isEmpty(this.shopUser)) {
         return [
-          {label: 'Boutique', to: '/shop'},
           {label: 'Compte bancaire', to: '/bank'},
+          {label: 'Login', to: '/shop/login'}
         ]
       } else {
         return [
           {label: 'Boutique', to: '/shop'},
-          {label: 'Compte bancaire', to: '/bank'}
+          {label: 'Compte bancaire', to: '/bank'},
+          {label: 'Logout', to: '/shop/login'}
         ]
       }
     }
