@@ -2,7 +2,7 @@
   <nav>
     <div class="nav-links">
       <button v-for="(link, index) in links"
-              :key="index"
+              :key="index" class="nav-button"
               @click="goTo(link.to)"
       >
         <slot name="nav-button" :label="link.label">{{ link.label }}</slot>
@@ -33,20 +33,21 @@ export default {
 nav .nav-links {
   display: flex;
   align-items: center;
+  justify-content: center; /* Aligne les boutons au centre horizontalement */
+  gap: 15px; /* Ajoute un espacement uniforme entre les boutons */
 }
 
 nav div a {
-  color: #00ff00;
   text-decoration: none;
   padding: 5px 10px;
-  background-color: #000;
-  border: 1px solid #00ff00;
+
   border-radius: 3px;
   margin-right: 10px;
   font-family: monospace;
 }
 
-nav div a:hover {
-  background-color: #007f00;
+.nav-button {
+  width: auto;
 }
+
 </style>

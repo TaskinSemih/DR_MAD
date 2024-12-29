@@ -64,6 +64,7 @@ const actions = {
         commit('updateShopUser', {});
         console.log(state.shopUser);
     },
+
     async getAllViruses({commit}) {
         console.log('récupération des viruses');
         let response = await ShopService.getAllViruses()

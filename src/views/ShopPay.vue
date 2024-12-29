@@ -7,16 +7,21 @@
       <div class="form-group">
         <label for="orderId">ID de la commande</label>
         <input
-          id="orderId"
-          v-model="orderId"
-          type="text"
-          placeholder="Entrez l'ID de la commande"
+            id="orderId"
+            v-model="orderId"
+            type="text"
+            placeholder="Entrez l'ID de la commande"
         />
       </div>
 
       <!-- Bouton Payer -->
       <button type="submit" class="btn">Payer</button>
     </form>
+
+    <!-- Message de succès -->
+    <div v-if="showSuccessMessage" class="success-message">
+      Commande payée avec succès : {{ orderId }}
+    </div>
   </div>
 </template>
 
@@ -26,6 +31,7 @@ export default {
   data() {
     return {
       orderId: this.$route.params.orderId || "",
+      showSuccessMessage: false, // Contrôle l'affichage du message
     };
   },
   computed: {
@@ -40,8 +46,13 @@ export default {
     payOrder() {
       console.log("je paye la commande");
       this.orders[this.orderIndex].status = "finalized";
-      alert("Commande payée " + this.orderId);
-      this.orderId = "";
+      this.showSuccessMessage = true;
+
+      // Réinitialise le champ après 3 secondes
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+        this.orderId = "";
+      }, 100000);
     },
   },
 };
@@ -109,5 +120,32 @@ input:focus {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+/* Message de succès */
+.success-message {
+  margin-top: 1.5rem;
+  padding: 0.8rem;
+  background-color: #28a745;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: 5px;
+  animation: fadeInOut 3s ease;
+}
+
+/* Animation pour faire apparaître et disparaître le message */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 </style>

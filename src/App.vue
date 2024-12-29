@@ -4,22 +4,23 @@
       <template v-slot:nav-button="{ label }">
         <span v-if="label === 'Boutique'"><strong>{{ label }}</strong></span>
         <img v-else-if="label === 'Compte bancaire'" src="@/assets/bank-icon.jpg" alt="Bank" style="width: 20px">
-        <span v-else-if="label === 'Logout'" @click="logoutUser">Logout</span>
+        <!-- Logout sans aucun style CSS -->
+        <span v-else-if="label === 'Logout'" @click="logoutUser">{{ label }}</span>
       </template>
     </NavBar>
 
     <router-view/>
-
   </div>
 </template>
 
+
 <script>
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex';
 import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: 'App',
-  components: {NavBar},
+  components: { NavBar },
   computed: {
     ...mapState({
       shopUser: state => state.shop.shopUser,
@@ -27,33 +28,41 @@ export default {
     links() {
       if (this.isEmpty(this.shopUser)) {
         return [
-          {label: 'Compte bancaire', to: '/bank'},
-          {label: 'Login', to: '/shop/login'}
-        ]
+          { label: 'Compte bancaire', to: '/bank' },
+          { label: 'Login', to: '/shop/login' }
+        ];
       } else {
         return [
-          {label: 'Boutique', to: '/shop'},
-          {label: 'Compte bancaire', to: '/bank'},
-          {label: 'Logout', to: '/shop/login'}
-        ]
+          { label: 'Boutique', to: '/shop' },
+          { label: 'Compte bancaire', to: '/bank' },
+          { label: 'Logout', to: '/shop/login' }
+        ];
       }
     }
   },
   methods: {
     ...mapActions(['getAllViruses', 'logout']),
     logoutUser() {
-      this.logout();
-      this.$router.push('/shop/login');
+      console.log('logoutUser method called'); // Vérifie si la méthode est appelée
+      if (!this.logout) {
+        console.error('logout is not defined in Vuex actions');
+        return;
+      }
+      this.logout(); // Appelle l’action logout de Vuex
+      this.$router.push('/shop/login'); // Redirige vers la page de login
     },
+
+
     isEmpty(obj) {
-      return Object.keys(obj).length === 0;
+      return obj === null || Object.keys(obj).length === 0; // Vérifie null ou objet vide
     },
   },
   mounted() {
-    this.getAllViruses()
+    this.getAllViruses(); // Charge les données nécessaires
   }
 };
 </script>
+
 <style>
 #app {
 }

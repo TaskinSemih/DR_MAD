@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Viruses</h1>
+    <h1>Les Virus</h1>
     <!--        <p> {{ items }}</p>-->
     <hr>
     <div>
