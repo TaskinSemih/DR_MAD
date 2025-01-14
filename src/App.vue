@@ -3,7 +3,7 @@
     <NavBar :links="links">
       <template v-slot:nav-button="{ label }">
         <span v-if="label === 'Boutique'"><strong>{{ label }}</strong></span>
-        <img v-else-if="label === 'Compte bancaire'" src="@/assets/bank-icon.jpg" alt="Bank" style="width: 20px">
+        <img v-else-if="label === 'Compte bancaire'" src="@/assets/bank-icon.jpg" alt="Bank" style="width: 30px">
         <!-- Logout sans aucun style CSS -->
         <span v-else-if="label === 'Logout'" @click="logoutUser">{{ label }}</span>
       </template>
@@ -35,7 +35,7 @@ export default {
         return [
           { label: 'Boutique', to: '/shop' },
           { label: 'Compte bancaire', to: '/bank' },
-          { label: 'Logout', to: '/shop/login' }
+          { label: 'Logout',  to: this.$route.path } //mettre la route de où est l'utilisateur
         ];
       }
     }

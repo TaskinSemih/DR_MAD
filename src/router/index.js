@@ -29,11 +29,7 @@ const routes = [
                 name: 'shoplogin',
                 component: () => import('../views/ShopLoginView.vue')
             },
-            {
-                path: 'logout',
-                name: 'shoplogout',
-                component: () => import('../views/ShopLoginView.vue')
-            },
+
             {
                 path: 'orders',
                 name: 'shoporders',

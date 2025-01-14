@@ -150,7 +150,7 @@ let bankaccounts = [
     {"_id": "65450e3e66a7639cbe9ee279", "number": "FRDRMAD578901234567890-0000666", "amount": 200000},
     {"_id": "6547cb118916a76757d0d21c", "number": "FRSHOP4578901234567890-0000999", "amount": 200000},
 ]
-let transactions = [
+let transactions  = [
     {
         "_id": "6547cb118916a76757d0d21f",
         "amount": -10500,

@@ -4,18 +4,19 @@
     <!--        <p> {{ items }}</p>-->
     <hr>
     <div>
-      <span>Filtres :</span><label for="filterpriceactive">Par prix</label><input type="checkbox"
+      <span>Filtrer par prix   </span><label for="filterpriceactive"></label><input type="checkbox"
                                                                                   v-model="filterPriceActive"
                                                                                   id="filterpriceactive">
-
-      <span>Filtres :</span><label for="filterNameActive">Par nom</label><input type="checkbox"
+      <span>Filtrer par nom   </span><label for="filterNameActive"></label>  <input type="checkbox"
                                                                                 v-model="filterNameActive"
                                                                                 id="filterNameActive">
+      <br>
       <span>
-        <label for="filterstock">Voir les virus en stock ?</label>
+        <label for="filterstock">Voir les virus en stock  </label>
         <input id="filterstock" type="checkbox" v-model="stockData">
       </span>
     </div>
+    <br>
     <div>
       <div v-if="filterPriceActive">
         <label for="filterprice">Prix moins que :</label>

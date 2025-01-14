@@ -33,8 +33,8 @@ export default {
 nav .nav-links {
   display: flex;
   align-items: center;
-  justify-content: center; /* Aligne les boutons au centre horizontalement */
-  gap: 15px; /* Ajoute un espacement uniforme entre les boutons */
+  justify-content: center;
+  gap: 15px;
 }
 
 nav div a {
