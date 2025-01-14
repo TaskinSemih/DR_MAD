@@ -1,5 +1,7 @@
 import {bankaccounts, items, shopusers, transactions} from './data'
 import {v4 as uuidv4} from 'uuid'
+import bcrypt from 'bcryptjs'; // Import de bcryptjs
+
 
 /* controllers: les fonctions ci-dessous doivent mimer ce que renvoie l'API en fonction des requêtes possibles.
 
@@ -12,31 +14,45 @@ import {v4 as uuidv4} from 'uuid'
  */
 
 function shopLogin(data) {
-    if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
-    let user = shopusers.find(e => e.login === data.login && e.password === data.password)
-    console.log('je suis dans le controller pour shoplogin')
-    console.log(user)
-    console.log("je suis mort")
-    if (!user) return {error: 1, status: 404, data: 'login or password incorrect'}
-    if (!user.uuid) {
-        user.uuid = uuidv4()
-    }
-    if (!user.basket) {
-        user.basket = {items: []};
+    if (!data.login || !data.password)
+        return { error: 1, status: 404, data: 'aucun login/pass fourni' };
+
+    const user = shopusers.find((e) => e.login === data.login);
+
+    console.log('je suis dans le controller pour shoplogin');
+    console.log(user);
+
+    if (!user) return { error: 1, status: 404, data: 'login incorrect' };
+
+    // Vérification du mot de passe avec bcrypt
+    const passwordMatches = bcrypt.compareSync(data.password, user.password);
+    if (!passwordMatches) {
+        return { error: 1, status: 404, data: 'mot de passe incorrect' };
     }
 
+    // Génération d'UUID pour l'utilisateur s'il n'en a pas encore
+    if (!user.uuid) {
+        user.uuid = uuidv4();
+    }
+
+    // Initialisation du panier de l'utilisateur
+    if (!user.basket) {
+        user.basket = { items: [] };
+    }
 
     return {
-        error: 0, status: 200, data: {
+        error: 0,
+        status: 200,
+        data: {
             name: user.name,
             login: user.login,
             email: user.email,
             session: user.session,
             basket: user.basket,
             orders: user.orders,
-            uuid: user.uuid
-        }
-    }
+            uuid: user.uuid,
+        },
+    };
 }
 
 function getAllViruses() {
@@ -59,13 +75,7 @@ function getAccountAmount(number) {
     return {error: 0, data: account.amount}
 }
 
-// function getTransactions(number) {
-//     if (number === undefined || number === "") return {error: 1, status: 404, data: 'empty number'}
-//     let account = bankaccounts.find(e => e.number === number)
-//     if (!account) return {error: 1, status: 404, data: 'unknown account'}
-//     let transactionsList = transactions.filter(e => e.account === account._id)
-//     return {error: 0, status: 200, data: transactionsList}
-// }
+
 
 function getAccount(number) {
     console.log("je get le compte, je suis dans le controller getAccount")
