@@ -17,7 +17,8 @@ let items = [
         "wait": {"$date": "2023-11-03T15:32:22.862Z"},
         "sold": true,
         "price": 5000,
-        "promotion": [{"discount": 5, "amount": 2, "_id": "654512860a4bd1c34897416e"}, {
+        "promotion": [{"discount": 5, "amount": 2, "_id": "654512860a4bd1c34897416e"},
+            {
             "discount": 10,
             "amount": 5,
             "_id": "654512860a4bd1c34897416f"

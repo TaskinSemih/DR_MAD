@@ -2,7 +2,6 @@
   <div class="viruses-container">
     <h1 class="title">Catalogue des Virus</h1>
 
-    <!-- Filtres -->
     <div class="filters">
       <h2 class="section-title">Filtres</h2>
       <div class="filter-group">
@@ -22,7 +21,6 @@
         </label>
       </div>
 
-      <!-- Champs des filtres -->
       <div v-if="filterPriceActive" class="filter-field">
         <label for="filterprice">Prix inférieur à :</label>
         <input
@@ -46,7 +44,6 @@
       </div>
     </div>
 
-    <!-- Liste des Virus -->
     <div class="virus-list">
       <h2 class="section-title">Liste des Virus</h2>
       <CheckedList
@@ -106,11 +103,11 @@ export default {
     },
     handleItemButtonClicked(index) {
       alert(
-        `Prix : ${this.viruses[index].price}₿\nStock : ${this.viruses[index].stock}`
+        `Prix : ${this.viruses[index].price}\nStock : ${this.viruses[index].stock}`
       );
     },
     handleListButtonClicked() {
-      alert("Virus sélectionnés !");
+      alert("Virus select");
     },
     handleAmountChanged(index, amount) {
       this.$set(this.selectedViruses, index, { amount });

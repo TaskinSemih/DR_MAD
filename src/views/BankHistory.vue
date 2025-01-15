@@ -68,6 +68,7 @@ export default {
     filterByPeriod(newVal) {
       if (!newVal) {
         this.startDate = null;
+
         this.endDate = null;
       }
     },
@@ -83,14 +84,12 @@ export default {
       transactions: (state) => state.bank.accountNumber.transactions,
     }),
     filteredTransactions() {
-      console.log("JE SUIS DANS LE COMPUTED");
       console.log(this.transactions);
       return this.transactions.filter((transaction) => {
-        console.log("JE SUIS DANS LE FILTER");
         console.log(transaction);
-        console.log("JE SUIS MORT");
         const transactionDate = new Date(transaction.date.$date);
         const startDate = this.startDate ? new Date(this.startDate) : null;
+
         const endDate = this.endDate ? new Date(this.endDate) : null;
 
         if (startDate && transactionDate < startDate) return false;
@@ -101,15 +100,17 @@ export default {
   methods: {
     openDialog(transaction) {
       console.log(this.filteredTransactions);
+
       this.dialogText = transaction.uuid;
       this.dialog = true;
     },
+
     openDialogForSelected() {
-      console.log("test");
       const selectedTransactions = this.filteredTransactions.filter(t => t.selected);
       this.dialogText = selectedTransactions.map(t => `- ${t.uuid}`).join('\n\n');
       this.dialog = true;
     },
+
     formatDate(dateString) {
       const date = new Date(dateString)
       return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`

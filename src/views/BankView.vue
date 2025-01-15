@@ -19,7 +19,6 @@
 </template>
 
 <script>
-// import NavBar from '../components/NavBar.vue';
 import VerticalMenu from '../components/VerticalMenu.vue';
 import BankAmount from '../views/BankAmount.vue';
 import BankHome from "@/views/BankHome.vue";
@@ -29,7 +28,6 @@ export default {
   name: 'BankView',
   components: {
     BankHome,
-    // NavBar,
     VerticalMenu,
     BankAmount
   },
@@ -39,8 +37,6 @@ export default {
       account: state => state.bank.accountNumber,
     }),
     navLinks() {
-      // console.log('je suis connecte');
-      // console.log(this.shopUser.login);
       return [
         {label: 'Mon compte', to: '/bank/account'},
       ]
@@ -51,19 +47,13 @@ export default {
     return {
       menuItems: [
         {type: 'button', label: 'Mon compte', to: '/bank/account'},
-        // {type: 'title', label: 'Opérations', to: '/bank/operation'},
         {type: 'button', label: 'Solde', to: '/bank/amount'},
         {type: 'button', label: 'Débit/Virement', to: '/bank/operation'},
-        // {type: 'title', label: 'États'},
         {type: 'button', label: 'Historique', to: '/bank/history'}
       ]
     }
   },
-  // created() {
-  //   this.$store.dispatch('getAccountAmount').then(res => {
-  //     this.accountAmount = res;
-  //   })
-  // }
+
 }
 </script>
 

@@ -3,7 +3,6 @@
     <h1 class="title">Paiement de la Commande</h1>
 
     <form @submit.prevent="payOrder" class="form">
-      <!-- Input pour l'ID de commande -->
       <div class="form-group">
         <label for="orderId">ID de la commande</label>
         <input
@@ -14,11 +13,9 @@
         />
       </div>
 
-      <!-- Bouton Payer -->
       <button type="submit" class="btn">Payer</button>
     </form>
 
-    <!-- Message de succès -->
     <div v-if="showSuccessMessage" class="success-message">
       Commande payée avec succès : {{ orderId }}
     </div>
@@ -31,7 +28,7 @@ export default {
   data() {
     return {
       orderId: this.$route.params.orderId || "",
-      showSuccessMessage: false, // Contrôle l'affichage du message
+      showSuccessMessage: false,
     };
   },
   computed: {
@@ -44,11 +41,10 @@ export default {
   },
   methods: {
     payOrder() {
-      console.log("je paye la commande");
       this.orders[this.orderIndex].status = "finalized";
       this.showSuccessMessage = true;
 
-      // Réinitialise le champ après 3 secondes
+      // Réinitialise le champ après 10 secondes
       setTimeout(() => {
         this.showSuccessMessage = false;
         this.orderId = "";

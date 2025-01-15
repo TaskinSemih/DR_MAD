@@ -4,7 +4,6 @@
       <template v-slot:nav-button="{ label }">
         <span v-if="label === 'Boutique'"><strong>{{ label }}</strong></span>
         <img v-else-if="label === 'Compte bancaire'" src="@/assets/bank-icon.jpg" alt="Bank" style="width: 30px">
-        <!-- Logout sans aucun style CSS -->
         <span v-else-if="label === 'Logout'" @click="logoutUser">{{ label }}</span>
       </template>
     </NavBar>
@@ -43,22 +42,22 @@ export default {
   methods: {
     ...mapActions(['getAllViruses', 'logout']),
     logoutUser() {
-      console.log('logoutUser method called'); // Vérifie si la méthode est appelée
+      console.log('logoutUser())');
       if (!this.logout) {
-        console.error('logout is not defined in Vuex actions');
+        console.error('logout isnt defined');
         return;
       }
-      this.logout(); // Appelle l’action logout de Vuex
-      this.$router.push('/shop/login'); // Redirige vers la page de login
+      this.logout();
+      this.$router.push('/shop/login');
     },
 
 
     isEmpty(obj) {
-      return obj === null || Object.keys(obj).length === 0; // Vérifie null ou objet vide
+      return obj === null || Object.keys(obj).length === 0;
     },
   },
   mounted() {
-    this.getAllViruses(); // Charge les données nécessaires
+    this.getAllViruses();
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div> <!-- Élément racine encapsulant tout le contenu -->
+  <div>
     <checked-list
         :data="currentBasket.items"
         :fields="['item.name', 'amount', 'Price']"
@@ -9,7 +9,6 @@
         @item-button-clicked="deleteItemFromBasket"
         @list-button-clicked="basketToOrder"
     />
-    <!-- Fenêtre de dialogue -->
     <div v-if="showDialog" class="dialog-overlay">
       <div class="dialog-box">
         <h2>Commande créée</h2>
@@ -43,7 +42,7 @@ export default {
     return {
       showDialog: false,
       orderUuid: '',
-      copySuccess: false, // Indique si la copie a réussi
+      copySuccess: false,
     };
   },
   methods: {
@@ -53,14 +52,14 @@ export default {
     },
     basketToOrder() {
       this.$store.dispatch('createOrder').then((order) => {
-        this.orderUuid = order.uuid; // Stocke l'UUID
-        this.showDialog = true; // Affiche le dialogue
-        this.$store.dispatch('clearBasket'); // Vide le panier
+        this.orderUuid = order.uuid;
+        this.showDialog = true;
+        this.$store.dispatch('clearBasket');
       });
     },
     closeDialog() {
-      this.showDialog = false; // Ferme le dialogue
-      this.copySuccess = false; // Réinitialise l'état de la copie
+      this.showDialog = false;
+      this.copySuccess = false;
     },
     copyUuid() {
       if (this.orderUuid) {

@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>Les Virus</h1>
-    <!--        <p> {{ items }}</p>-->
     <hr>
     <div>
       <span>Filtrer par prix   </span><label for="filterpriceactive"></label><input type="checkbox"
@@ -19,11 +18,11 @@
     <br>
     <div>
       <div v-if="filterPriceActive">
-        <label for="filterprice">Prix moins que :</label>
+        <label for="filterprice">Prix inférieur à   :</label>
         <input v-model="priceFilter" id="filterprice" type="number" @keypress="allowNumbersOnly" min="0" step="500">
       </div>
       <div v-if="filterNameActive">
-        <label for="filtername">Contenant les lettres :</label>
+        <label for="filtername">Contenant les lettres  :</label>
         <input v-model="nameFilter" id="filtername" type="text">
       </div>
 
@@ -93,10 +92,8 @@ export default {
         filteredViruses = filteredViruses.filter(v => v.stock > 0);
       }
       return filteredViruses;
-    },
-    // discounts() {
-    //   return this.data.map(item => item.promotion.map(promo => promo.discount + '%').join(' | '));
-    // },
+    }
+
   },
   methods: {
     allowNumbersOnly(event) {
@@ -120,9 +117,7 @@ export default {
       this.$set(this.selectedItems, index, checkedIndexes)
     },
     handleItemButtonClicked(index) {
-      // console.log("VirusesView says: item button clicked on index " + index)
-      // alert("Price of " + this.filters[index].name + " is " + this.filters[index].price + "₿" + "\n" + "Sold T/F : " + this.filters[index].sold + "\nStock: " + this.filters[index].stock)
-      console.log("j'ajoute dans le panier");
+     console.log("ItemsList - ajouter dans le panier");
       const item = this.filters[index];
       const amount = parseInt(this.selectedItems[index].amount, 10);
       this.$store.dispatch('addToBasket', {item: item, amount: amount});
@@ -131,7 +126,6 @@ export default {
       let result = "List of checked viruses: \n\n";
       for (let [index, checked] of Object.entries(this.selectedItems)) {
         if (checked) {
-          console.log("VirusesView says: list button clicked on index " + index)
           console.log(this.selectedItems);
           result += `Name: ${this.filters[index].name}\n Amount : ${this.selectedItems[index].amount} \n\n`
 
@@ -144,7 +138,6 @@ export default {
       this.resetCheckboxes();
     },
     handleAmountChanged(index, amount) {
-      console.log("VirusesView says: amount changed on index " + index + " to " + amount)
       console.log(this.items[index].name + " " + amount)
       this.$set(this.selectedItems, index, {amount: amount})
     },

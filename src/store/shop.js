@@ -7,16 +7,23 @@ const state = () => ({
 
 const mutations = {
     updateViruses(state, viruses) {
+        console.log('shop.js - updateViruses');
+
         state.viruses = viruses
     },
+
     updateShopUser(state, user) {
-        console.log('updating shop user');
+        console.log('shop.js - updateShopUser');
         state.shopUser = user
     },
+
     updateBasket(state, basket) {
+        console.log('shop.js - updateBasket');
         state.shopUser.basket = basket
     },
+
     addItemToBasket(state, {item, amount}) {
+        console.log('shop.js - addItemToBasket');
         const existingItem = state.shopUser.basket.items.find(i => i.item === item);
         if (existingItem) {
             existingItem.amount += amount;
@@ -24,6 +31,7 @@ const mutations = {
             state.shopUser.basket.items.push({item, amount});
         }
     },
+
     removeItemFromBasket(state, item) {
         // marche pas
         // const index = state.shopUser.basket.items.findIndex(i => i.item === item);

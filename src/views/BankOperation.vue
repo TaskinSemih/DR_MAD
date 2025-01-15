@@ -36,9 +36,9 @@ export default {
   methods: {
     ...mapActions(["createPayment", 'createWithdraw']),
     validateOperation() {
-      console.log("validateOperation");
       console.log(this.account);
       console.log(this.amount);
+
       console.log(this.recipient);
       if (this.isRecipientChecked) {
         this.createPayment({
@@ -58,8 +58,6 @@ export default {
       }
     },
     test() {
-      // @change dans le input
-      console.log("test");
       console.log(this.account);
       console.log(this.amount);
       console.log(this.recipient);

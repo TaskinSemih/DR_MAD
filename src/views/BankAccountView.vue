@@ -2,7 +2,6 @@
   <div class="bank-account-container">
     <h1 class="title">Compte en Banque</h1>
 
-    <!-- Formulaire -->
     <form @submit.prevent="getAccountCredentials(number)" class="form">
       <div class="form-group">
         <label for="account-number">Numéro de compte</label>
@@ -24,12 +23,10 @@
       </div>
     </form>
 
-    <!-- Message d'erreur -->
     <div v-if="accountNumberError === -1" class="error-message">
       <p>Numéro de compte invalide.</p>
     </div>
 
-    <!-- Informations du compte -->
     <div v-if="account" class="account-info">
       <p>Bonjour {{ account }}</p>
     </div>
@@ -58,6 +55,7 @@ export default {
     ...mapActions(["getAccount", "resetAccountNumber"]),
     reset() {
       this.number = "";
+
       this.$store.commit("updateAccountNumberError", 0);
       this.$store.dispatch("resetAccountNumber");
     },
@@ -69,7 +67,6 @@ export default {
 </script>
 
 <style scoped>
-/* Container */
 .bank-account-container {
   max-width: 500px;
   margin: 3rem auto;
@@ -80,14 +77,12 @@ export default {
   text-align: center;
 }
 
-/* Title */
 .title {
   font-size: 2rem;
   color: #007bff;
   margin-bottom: 1.5rem;
 }
 
-/* Form */
 .form-group {
   margin-bottom: 1rem;
   text-align: left;

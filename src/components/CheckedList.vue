@@ -31,7 +31,6 @@
           <button v-if="typeof itemButton.show === 'function' ? itemButton.show(index) : itemButton.show"
                   @click="$emit('item-button-clicked', index)">{{ itemButton.text }}
           </button>
-          <!--          <button v-if="cancelButton.show" @click="$emit('item-cancel-button-clicked', index)">{{ cancelButton.text }}</button>-->
           <button v-if="typeof cancelButton.show === 'function' ? cancelButton.show(index) : cancelButton.show"
                   @click="$emit('item-cancel-button-clicked', index)">{{ cancelButton.text }}
           </button>
@@ -50,12 +49,12 @@
 export default {
   name: 'CheckedList',
   props: {
-    data: Array, // les données sources
-    fields: Array, // le tableau contenant le nom des champs
-    itemCheck: Boolean, // s'il y a des case à cocher
-    checked: Array, // le tableau des cases cochées
-    itemButton: Object, // l'objet pour les boutons d'items
-    listButton: Object, // l'objet pour le bouton de liste,
+    data: Array,
+    fields: Array,
+    itemCheck: Boolean,
+    checked: Array,
+    itemButton: Object,
+    listButton: Object,
     cancelButton: Object,
     itemAmount: Boolean,
   },
@@ -78,7 +77,7 @@ export default {
         value = value[key];
       }
       if (field === 'promotion') {
-        return value.map(promo => promo.discount + '%').join(' | ');
+        return value.map(promo => promo.discount + '% pour ' + promo.amount).join(' | ');
       }
       if (field === 'Price') {
         return this.calculatePrice(item);

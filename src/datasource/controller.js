@@ -3,15 +3,7 @@ import {v4 as uuidv4} from 'uuid'
 import bcrypt from 'bcryptjs'; // Import de bcryptjs
 
 
-/* controllers: les fonctions ci-dessous doivent mimer ce que renvoie l'API en fonction des requêtes possibles.
 
-  Dans certains cas, ces fonctions vont avoir des paramètres afin de filtrer les données qui se trouvent dans data.js
-  Ces paramètres sont généralement les mêmes qu'ils faudrait envoyer à l'API, mais pas forcément.
-
-  Exemple 1 : se loguer aurpès de la boutique
-
-
- */
 
 function shopLogin(data) {
     if (!data.login || !data.password)
@@ -19,23 +11,17 @@ function shopLogin(data) {
 
     const user = shopusers.find((e) => e.login === data.login);
 
-    console.log('je suis dans le controller pour shoplogin');
-    console.log(user);
-
     if (!user) return { error: 1, status: 404, data: 'login incorrect' };
 
-    // Vérification du mot de passe avec bcrypt
     const passwordMatches = bcrypt.compareSync(data.password, user.password);
     if (!passwordMatches) {
         return { error: 1, status: 404, data: 'mot de passe incorrect' };
     }
 
-    // Génération d'UUID pour l'utilisateur s'il n'en a pas encore
     if (!user.uuid) {
         user.uuid = uuidv4();
     }
 
-    // Initialisation du panier de l'utilisateur
     if (!user.basket) {
         user.basket = { items: [] };
     }
@@ -66,11 +52,9 @@ function getOrder(orderId, userId) {
 
 function getAccountAmount(number) {
     if (number === undefined || number === "") return {error: 1, status: 404, data: 'empty number'}
-    console.log("number " + number)
+    console.log("number : " + number)
     let account = bankaccounts.find(e => e.number === number)
-    console.log("je suis dans le getAccountAmount")
-    console.log("compte ")
-    console.log(account)
+    console.log("compte : " + account)
     if (!account) return {error: 1, status: 404, data: 'unknown account'}
     return {error: 0, data: account.amount}
 }
@@ -78,29 +62,24 @@ function getAccountAmount(number) {
 
 
 function getAccount(number) {
-    console.log("je get le compte, je suis dans le controller getAccount")
+    console.log("controller.js - getAccount")
     if (number === "" || number === undefined) return {error: 1, status: 404, data: 'empty number'};
     const res = bankaccounts.find((account) => account.number === number);
-    console.log(res)
-    if (!res) return {error: 1, status: 404, data: 'account doesn"t exists'};
-
+    if (!res) return {error: 1, status: 404, data: 'account dont exists'};
     res.transactions = transactions.filter((trans) => trans.account === res._id || trans.destination === res._id);
-
-    console.log("je suis mort")
     return {error: 0, status: 200, data: res};
 }
 
 function getTransactions(id_account) {
-    console.log("je récupère les transactions")
+    console.log("controller.js - getTransactions")
     if (id_account === "" || id_account === undefined) return {error: 1, status: 404, data: 'empty number'};
     const res = transactions.filter((trans) => trans.account === id_account || trans.destination === id_account);
     if (!res) return {error: 1, status: 404, data: 'account doesn"t exists'};
-    console.log("je suis mort")
     return {error: 0, status: 200, data: res};
 }
 
 function createWithdraw(id_account, amount) {
-    console.log("je suis dans le createWithdraw")
+    console.log("controller.js - createWithdraw")
     const account = bankaccounts.find(e => e._id === id_account);
     if (!account) return {error: 1, status: 404, data: 'invalid account id'};
 
@@ -122,19 +101,16 @@ function createWithdraw(id_account, amount) {
 
     account.amount -= amount;
 
-    console.log("je suis mort")
     return {error: 0, status: 200, data: {uuid: transaction.uuid, amount: account.amount}};
 }
 
 function createPayment(id_account, amount, destination) {
     try {
-        console.log("je suis dans le createPayment")
+        console.log("controller.js - createPayment")
         const account = bankaccounts.find(e => e._id === id_account);
-        console.log("compte ")
-        console.log(account)
+        console.log("account : " + account)
         const destinationAccount = bankaccounts.find(e => e._id === destination);
-        console.log("destination ")
-        console.log(destinationAccount)
+        console.log("destinationAccount : " + destinationAccount)
         if (!account) return {error: 1, status: 404, data: 'invalid account id'};
         if (!destination) return {error: 1, status: 404, data: 'invalid destination'};
 
@@ -151,16 +127,11 @@ function createPayment(id_account, amount, destination) {
             uuid: uuidv4()
         };
 
-        console.log(transaction)
-
         account.transactions.push(transaction);
 
         account.amount -= Number(amount);
         destinationAccount.amount += Number(amount);
-        console.log("compte de destination")
-        console.log(destinationAccount)
 
-        console.log("je suis mort")
         return {
             error: 0, status: 200, data: {
                 _id: account._id,

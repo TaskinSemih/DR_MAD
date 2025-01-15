@@ -1,12 +1,10 @@
 <template>
   <div class="shop-buy">
-    <!-- Liste des articles -->
     <div class="shop-buy__items-container">
       <h2 class="section-title">Nos Articles</h2>
       <ItemsList class="shop-buy__items" />
     </div>
 
-    <!-- Panier -->
     <div class="shop-buy__basket-container">
       <h2 class="section-title">Votre Panier</h2>
       <BasketList class="shop-buy__basket" />

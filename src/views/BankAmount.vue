@@ -7,6 +7,5 @@
 <script>
 export default {
   name: 'BankAmount',
-  // props: {balance: Number}
 }
 </script>

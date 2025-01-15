@@ -38,7 +38,6 @@ export default {
       return this.orders[index].status === "waiting_payment";
     },
     itemButtonBuy(index) {
-      console.log("JE FINALISE LA COMMANDE");
       let uuid = this.orders[index].uuid;
       this.$router.push({
         name: "shoppay",
@@ -46,7 +45,6 @@ export default {
       });
     },
     itemButtonCancel(index) {
-      console.log("JE CANCEL LA COMMANDE");
       this.orders[index].status = "cancelled";
       this.$store.dispatch("cancelOrder", this.orders[index]);
     },

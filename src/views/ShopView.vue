@@ -27,10 +27,10 @@ export default {
     },
     navLinks() {
       if (Object.keys(this.shopUser).length > 0) {
-        console.log('je suis connecte');
         console.log(this.shopUser.login);
         return [
-          {label: 'Faire des emplettes', to: '/shop/buy'},
+          {label: 'Acheter', to: '/shop/buy'},
+
           {label: 'Payer', to: '/shop/pay'},
           {label: 'Commandes', to: '/shop/orders'},
         ]
