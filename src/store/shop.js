@@ -33,11 +33,7 @@ const mutations = {
     },
 
     removeItemFromBasket(state, item) {
-        // marche pas
-        // const index = state.shopUser.basket.items.findIndex(i => i.item === item);
-        // if (index !== -1) {
-        //     state.shopUser.basket.items.splice(index, 1);
-        // }
+        console.log('shop.js - removeItemFromBasket');
         const index = state.shopUser.basket.items.indexOf(item);
         state.shopUser.basket.items.splice(index, 1);
     },
@@ -48,19 +44,13 @@ const mutations = {
 
 const actions = {
     async shopLogin({commit}, data) {
-        console.log('trying to log in');
-        console.log('shopLogin action called with:', { data });
+        console.log('shop.js - shopLogin');
         let response = await ShopService.shopLogin(data)
-        console.log("\"je suis dans le store de shop \" + ")
         console.log(response.data)
-        console.log("JE SUIS MORT")
         if (response.error === 0) {
-            console.log("je commit là")
             console.log(response.data)
             await commit('updateShopUser', response.data)
-            console.log("------------------------------------")
             await router.push('/shop/buy')
-            console.log("je suis loggé en tant que :")
             console.log(state.shopUser)
         } else {
             console.log("erreur de login")
@@ -68,13 +58,13 @@ const actions = {
         }
     },
     logout({commit}) {
-        console.log('trying to log out');
+        console.log('shop.js - logout');
         commit('updateShopUser', {});
         console.log(state.shopUser);
     },
 
     async getAllViruses({commit}) {
-        console.log('récupération des viruses');
+        console.log('shop.js - getAllViruses');
         let response = await ShopService.getAllViruses()
         if (response.error === 0) {
             commit('updateViruses', response.data)
@@ -83,7 +73,7 @@ const actions = {
         }
     },
     async updateBasket({commit, state}, basket) {
-        console.log('mise à jour du panier');
+        console.log('shop.js - updateBasket');
         let response = await ShopService.updateBasket(state.shopUser, state.shopUser.basket)
         if (response.error === 0) {
             commit('updateBasket', basket)
@@ -92,6 +82,7 @@ const actions = {
         }
     },
     async addToBasket({commit, state}, {item, amount}) {
+        console.log('shop.js - addToBasket');
         commit('addItemToBasket', {item, amount});
         let response = await ShopService.updateBasket(state.shopUser, state.shopUser.basket);
         if (response.error === 0) {
@@ -101,16 +92,16 @@ const actions = {
         }
     },
     async removeItemFromBasket({commit}, item) {
-        console.log('J"ai tué l"item');
+        console.log('shop.js - removeItemFromBasket');
         commit('removeItemFromBasket', item);
     },
 
     async clearBasket({state}) {
-        console.log('je vide le panier');
+        console.log('shop.js - clearBasket');
         state.shopUser.basket.items = [];
     },
     async cancelOrder({state}, orderId) {
-        console.log('je cancel la commande');
+        console.log('shop.js - cancelOrder');
         const index = state.shopUser.orders.findIndex(order => order.id === orderId);
         if (index === -1) {
             state.shopUser.orders.splice(index, 1);
@@ -119,12 +110,13 @@ const actions = {
     },
 
     async createOrder({commit, state}) {
-        console.log('COUCOU JE PASSE COMMANDE');
+        console.log('shop.js - createOrder');
         const order = await ShopService.createOrderFromBasket(state.shopUser);
         commit('createOrder', order);
         return order;
     },
     async finalizeOrder({state, commit}, orderId) {
+        console.log('shop.js - finalizeOrder');
         let order = state.shopUser.orders.find(order => order.id === orderId);
         if (!order) {
             order = await ShopService.verifyOrder();
@@ -138,9 +130,8 @@ const actions = {
 
 const getters = {
     currentBasket: (state) => {
-        console.log('getting current basket');
+        console.log('shop.js - currentBasket');
         console.log(state.shopUser.basket);
-        console.log("je suis mort");
         return state.shopUser ? state.shopUser.basket : [];
     },
 }
