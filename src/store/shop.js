@@ -22,13 +22,23 @@ const mutations = {
         state.shopUser.basket = basket
     },
 
-    addItemToBasket(state, {item, amount}) {
+    addItemToBasket(state, { item, amount }) {
         console.log('shop.js - addItemToBasket');
-        const existingItem = state.shopUser.basket.items.find(i => i.item === item);
+
+        // Vérification du stock total demandé
+        const existingItem = state.shopUser.basket.items.find(i => i.item._id === item._id);
+        const currentAmountInBasket = existingItem ? existingItem.amount : 0;
+        const totalRequested = currentAmountInBasket + amount;
+
+        if (totalRequested > item.stock) {
+            throw new Error('Stock insuffisants'); // Déclenche une erreur si le stock est dépassé
+        }
+
+        // Ajout ou mise à jour de l'item dans le panier
         if (existingItem) {
             existingItem.amount += amount;
         } else {
-            state.shopUser.basket.items.push({item, amount});
+            state.shopUser.basket.items.push({ item, amount });
         }
     },
 
@@ -81,16 +91,26 @@ const actions = {
             console.log(response.data)
         }
     },
-    async addToBasket({commit, state}, {item, amount}) {
+    async addToBasket({ commit, state }, { item, amount }) {
         console.log('shop.js - addToBasket');
-        commit('addItemToBasket', {item, amount});
-        let response = await ShopService.updateBasket(state.shopUser, state.shopUser.basket);
-        if (response.error === 0) {
-            commit('updateBasket', state.shopUser.basket);
-        } else {
-            console.log(response.data);
+
+        try {
+            // Appelle la mutation avec vérification du stock
+            commit('addItemToBasket', { item, amount });
+
+            // Mise à jour du panier côté BDD
+            let response = await ShopService.updateBasket(state.shopUser, state.shopUser.basket);
+            if (response.error === 0) {
+                commit('updateBasket', state.shopUser.basket);
+            } else {
+                console.log(response.data);
+            }
+        } catch (error) {
+            console.error('Erreur :', error.message);
+            alert(error.message); // Affiche une alerte en cas d'erreur
         }
     },
+    
     async removeItemFromBasket({commit}, item) {
         console.log('shop.js - removeItemFromBasket');
         commit('removeItemFromBasket', item);

@@ -3,12 +3,16 @@
     <checked-list
         :data="currentBasket.items"
         :fields="['item.name', 'amount', 'Price']"
-        :item-button="{show: true, text: 'Supprimer'}"
-        :list-button="{show: true, text: 'Acheter'}"
-        :cancel-button="{show: false}"
+        :item-button="{ show: true, text: 'Supprimer' }"
+        :list-button="{ show: false, text: 'Acheter' }"
+        :cancel-button="{ show: false }"
         @item-button-clicked="deleteItemFromBasket"
         @list-button-clicked="basketToOrder"
     />
+    <div class="action-buttons">
+      <button @click="deleteAllItemFromBasket" class="btn clear-btn">Vider le panier</button>
+      <button @click="basketToOrder" class="btn buy-btn">Acheter</button>
+    </div>
     <div v-if="showDialog" class="dialog-overlay">
       <div class="dialog-box">
         <h2>Commande créée</h2>
@@ -50,11 +54,37 @@ export default {
       const item = this.currentBasket.items[index];
       this.$store.dispatch('removeItemFromBasket', item);
     },
+    deleteAllItemFromBasket() {
+      if (this.currentBasket.items.length === 0) {
+        alert('Le panier est déjà vide.');
+        return;
+      }
+
+      if (confirm('Voulez-vous vraiment supprimer tous les articles du panier ?')) {
+        this.$store.dispatch('clearBasket')
+            .then(() => {
+              alert('Tous les articles ont été supprimés du panier.');
+            })
+            .catch((error) => {
+              console.error('Erreur lors de la suppression des articles :', error);
+              alert('Une erreur est survenue lors de la suppression des articles.');
+            });
+      }
+    },
     basketToOrder() {
+      // Vérification si le panier est vide
+      if (this.currentBasket.items.length === 0) {
+        alert('Votre panier est vide. Veuillez ajouter des articles avant de passer une commande.');
+        return;
+      }
+
       this.$store.dispatch('createOrder').then((order) => {
         this.orderUuid = order.uuid;
         this.showDialog = true;
         this.$store.dispatch('clearBasket');
+      }).catch((error) => {
+        console.error('Erreur lors de la création de la commande :', error);
+        alert('Une erreur est survenue lors de la création de la commande. Veuillez réessayer.');
       });
     },
     closeDialog() {
@@ -79,7 +109,42 @@ export default {
 };
 </script>
 
+
 <style>
+/* Boutons d'actions supplémentaires */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+}
+
+.clear-btn {
+  background-color: #dc3545; /* Rouge pour Vider */
+}
+
+.clear-btn:hover {
+  background-color: #a71d2a;
+}
+
+.buy-btn {
+  background-color: #007bff; /* Bleu pour Acheter */
+}
+
+.buy-btn:hover {
+  background-color: #0056b3;
+}
+
 .dialog-overlay {
   position: fixed;
   top: 0;

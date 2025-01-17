@@ -113,28 +113,37 @@ export default {
       }
     },
     handleCheckChanged(index, checkedIndexes) {
-      console.log("VirusesView says: checkedIndexes = " + checkedIndexes)
+      console.log("handleCheckChanged :  " + checkedIndexes)
       this.$set(this.selectedItems, index, checkedIndexes)
     },
     handleItemButtonClicked(index) {
-     console.log("ItemsList - ajouter dans le panier");
+     console.log("handleItemButtonClicked");
       const item = this.filters[index];
       const amount = parseInt(this.selectedItems[index].amount, 10);
-      this.$store.dispatch('addToBasket', {item: item, amount: amount});
+      console.log("amount : " + amount + ", item.stock : " + item.stock);
+      if (amount <= item.stock){
+        this.$store.dispatch('addToBasket', {item: item, amount: amount});
+      }
+      else {
+        alert("stock insuffisants")
+      }
+
     },
     handleListButtonClicked() {
-      let result = "List of checked viruses: \n\n";
       for (let [index, checked] of Object.entries(this.selectedItems)) {
         if (checked) {
-          console.log(this.selectedItems);
-          result += `Name: ${this.filters[index].name}\n Amount : ${this.selectedItems[index].amount} \n\n`
+          console.log("this.selectedItems : " +  this.selectedItems);
 
           const item = this.filters[index];
           const amount = parseInt(this.selectedItems[index].amount, 10);
-          this.$store.dispatch('addToBasket', {item: item, amount: amount});
+          console.log("amount : " + amount + ", item.stock : " + item.stock);
+          if (amount <= item.stock){
+            this.$store.dispatch('addToBasket', {item: item, amount: amount});          }
+          else {
+            alert("stock insuffisants")
+          }
         }
       }
-      alert(result);
       this.resetCheckboxes();
     },
     handleAmountChanged(index, amount) {
