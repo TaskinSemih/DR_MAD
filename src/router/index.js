@@ -7,7 +7,7 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import('../views/HomeView.vue')
+        component: () => import('../views/HomeView.vue') //composant de base chef
     },
     {
         path: '/shop',

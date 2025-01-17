@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Dr Mad app</h1>
-    <p>Bienvenue chez dr Mad</p>
+    <p>Bienvenue chez dr Mad </p>
   </div>
 </template>
 
