@@ -14,7 +14,7 @@ const routes = [
         component: () => import('../views/ShopView.vue'),
         children: [
             {
-                path: 'buy',
+                path: 'buy',    
                 name: 'shopbuy',
                 component: () => import('../views/ShopBuy.vue')
             },
