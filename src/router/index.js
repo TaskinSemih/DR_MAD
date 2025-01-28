@@ -7,14 +7,13 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import('../views/HomeView.vue') //composant de base chef
     },
     {
         path: '/shop',
         component: () => import('../views/ShopView.vue'),
         children: [
             {
-                path: 'buy',    
+                path: 'buy',
                 name: 'shopbuy',
                 component: () => import('../views/ShopBuy.vue')
             },

@@ -18,7 +18,7 @@
           Soumettre
         </button>
         <button type="button" class="btn btn-secondary" @click="reset">
-          Réinitialiser
+          Déconnexion
         </button>
       </div>
     </form>
