@@ -1,147 +1,68 @@
 <template>
-  <div class="pay-container">
-    <h1 class="title">Paiement de la Commande</h1>
-
-    <form @submit.prevent="payOrder" class="form">
-      <div class="form-group">
-        <label for="orderId">ID de la commande</label>
-        <input
-            id="orderId"
-            v-model="orderId"
-            type="text"
-            placeholder="Entrez l'ID de la commande"
-        />
-      </div>
-
-      <button type="submit" class="btn">Payer</button>
-    </form>
-
-    <div v-if="showSuccessMessage" class="success-message">
-      Commande payée avec succès : {{ orderId }}
+  <div>
+    <h2>Payer la commande</h2>
+    <div v-if="orderId">
+      <label for="order-id">uuid commande : </label>
+      <input type="text" id="order-id" v-model="orderInput"/>
     </div>
+    <div v-else>
+      <label for="order-id">ID de la commande:</label>
+      <input type="text" id="order-id" v-model="orderInput" placeholder="Entrez l'ID de la commande"/>
+    </div>
+
+
+    <label for="order-id">uuid transaction : </label>
+    <input type="text" id="order-id" v-model="uuidTransaction"/>
+    <button @click="finalizeOrder" :disabled="!orderInput">Payer</button>
   </div>
 </template>
 
 <script>
+import { finalizeUserOrder } from "@/services/shop.service";
+import { mapState } from "vuex";
+import {shopusers} from "@/datasource/data";
+
 export default {
-  name: "ShopPay",
+  props: {
+    orderId: String
+  },
   data() {
     return {
-      orderId: this.$route.params.orderId || "",
-      showSuccessMessage: false,
+      orderInput: this.orderId || '',
+      uuidTransaction: null
     };
   },
   computed: {
-    orderIndex() {
-      return this.$route.params.orderIndex;
+    ...mapState({
+      shopUser: state => state.shop.shopUser,  // Ajoute shopUser ici
+      userId: state => state.shop.shopUser._id,
+      orders: state => state.shop.shopUser.orders,
+    }),
+    orderDate() {
+      const order = this.orders && Array.isArray(this.orders) && this.orders.find(order => order.uuid === this.orderInput);
+      return order ? order.date : null;
     },
-    orders() {
-      return this.$store.state.shop.shopUser.orders;
-    },
+    orderPrice() {
+      const order = this.orders && Array.isArray(this.orders) && this.orders.find(order => order.uuid === this.orderInput);
+      return order ? order.total : null;
+    }
   },
   methods: {
-    payOrder() {
-      this.orders[this.orderIndex].status = "finalized";
-      this.showSuccessMessage = true;
+    async finalizeOrder() {
+      console.log("shop user", this.shopUser)
+      const userId = this.userId;
+      const orderId = this.orderInput;
+      const transactionUuid = this.uuidTransaction
+      console.log(transactionUuid);
 
-      // Réinitialise le champ après 10 secondes
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-        this.orderId = "";
-      }, 100000);
+      const response = await finalizeUserOrder(userId, orderId, transactionUuid);
+
+      console.log(response);
+      await this.$router.push('/shop/orders');
     },
   },
 };
 </script>
 
 <style scoped>
-/* Container */
-.pay-container {
-  max-width: 500px;
-  margin: 5% auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* Title */
-.title {
-  font-size: 2rem;
-  color: #007bff;
-  margin-bottom: 1.5rem;
-}
-
-/* Form */
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #555;
-}
-
-input {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Button */
-.btn {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
-/* Message de succès */
-.success-message {
-  margin-top: 1.5rem;
-  padding: 0.8rem;
-  background-color: #28a745;
-  color: #fff;
-  font-size: 1rem;
-  border-radius: 5px;
-  animation: fadeInOut 3s ease;
-}
-
-/* Animation pour faire apparaître et disparaître le message */
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
 </style>

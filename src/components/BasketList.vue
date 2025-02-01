@@ -82,6 +82,11 @@ export default {
         this.orderUuid = order.uuid;
         this.showDialog = true;
         this.$store.dispatch('clearBasket');
+
+        this.$router.push({
+          name: "shoppay",
+          params: { orderId: order.uuid }
+        });
       }).catch((error) => {
         console.error('Erreur lors de la création de la commande :', error);
         alert('Une erreur est survenue lors de la création de la commande. Veuillez réessayer.');
@@ -90,6 +95,7 @@ export default {
     closeDialog() {
       this.showDialog = false;
       this.copySuccess = false;
+
     },
     copyUuid() {
       if (this.orderUuid) {

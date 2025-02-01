@@ -30,6 +30,7 @@ function shopLogin(data) {
         error: 0,
         status: 200,
         data: {
+            _id: user._id,
             name: user.name,
             login: user.login,
             email: user.email,
@@ -70,13 +71,20 @@ function getAccount(number) {
     return {error: 0, status: 200, data: res};
 }
 
-function getTransactions(id_account) {
-    console.log("controller.js - getTransactions")
-    if (id_account === "" || id_account === undefined) return {error: 1, status: 404, data: 'empty number'};
+function getTransactions(id_account = null) {
+    console.log("controller.js - getTransactions", id_account);
+
+    if (id_account === "" || id_account === undefined || id_account === null) {
+        console.warn("⚠ Aucun id_account fourni, récupération de toutes les transactions");
+        return transactions;  // Retourne toutes les transactions si aucun compte spécifique n'est précisé
+    }
+
     const res = transactions.filter((trans) => trans.account === id_account || trans.destination === id_account);
-    if (!res) return {error: 1, status: 404, data: 'account doesn"t exists'};
-    return {error: 0, status: 200, data: res};
+    if (!res.length) return {error: 1, status: 404, data: 'Aucune transaction trouvée pour cet ID de compte'};
+
+    return res;
 }
+
 
 function createWithdraw(id_account, amount) {
     console.log("controller.js - createWithdraw")
@@ -132,6 +140,10 @@ function createPayment(id_account, amount, destination) {
         account.amount -= Number(amount);
         destinationAccount.amount += Number(amount);
 
+        console.log("✅ Nouvelle transaction ajoutée :", transaction);
+        console.log("📜 Transactions après ajout :", transactions.map(t => t.uuid));
+
+
         return {
             error: 0, status: 200, data: {
                 _id: account._id,
@@ -139,7 +151,7 @@ function createPayment(id_account, amount, destination) {
                 amount: amount,
                 destination: destinationAccount.number,
                 date: transaction.date,
-                // transaction: transaction
+                transaction: transaction
             }
         };
     } catch (error) {
@@ -149,6 +161,63 @@ function createPayment(id_account, amount, destination) {
 }
 
 
+function finalizeUserOrder(userId, orderId, transactionUuid) {
+
+    if (!userId) {
+        return {error: 1, status: 404, data: "Aucun ID utilisateur fourni"};
+    }
+    if (!orderId) {
+        return {error: 1, status: 404, data: "Aucun ID de commande fourni"};
+    }
+    if (!transactionUuid) {
+        return {error: 1, status: 404, data: "Aucun UUID de transaction fourni"};
+    }
+
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) {
+        return {error: 1, status: 404, data: "Utilisateur non trouvé"};
+    }
+
+    const order = user.orders?.find(o => o.uuid === orderId);
+    if (!order) {
+        return {error: 1, status: 404, data: "Commande non trouvée"};
+    }
+
+    if (order.status === "finalized") {
+        return {error: 1, status: 400, data: "La commande est déjà finalisée"};
+    }
+    console.log(" controller transactionUuid", transactionUuid)
+    console.log("🔍 Recherche de la transaction...");
+    console.log("🔎 UUID recherché :", transactionUuid);
+    console.log("📜 Liste des transactions disponibles :", transactions.map(t => ({ uuid: t.uuid, _id: t._id, amount: t.amount })));
+
+
+    const allTransactions = getTransactions();
+    console.log("📜 Transactions en temps réel :", allTransactions);
+
+    const transaction = allTransactions.find(t => t.uuid === transactionUuid);
+    if (!transaction) {
+        return {error: 1, status: 404, data: "Transaction non trouvée"};
+    }
+
+    if (order.total !== Math.abs(transaction.amount)) {
+        return {
+            error: 1, status: 400, data: "Le montant de la transaction ne correspond pas au montant de la commande"
+        };
+    }
+
+    const shopAccount = bankaccounts.find(account => account.number === "FRSHOP4578901234567890-0000999");
+    if (transaction.account !== shopAccount._id) {
+        return {
+            error: 1, status: 400, data: "La transaction ne concerne pas le compte de la boutique"
+        };
+    }
+
+    order.status = "finalized";
+
+    return {error: 0, status: 200, data: "Commande finalisée avec succès"};
+}
+
 export default {
-    shopLogin, getAllViruses, getAccountAmount, getTransactions, getOrder, getAccount, createWithdraw, createPayment
+    shopLogin, getAllViruses, getAccountAmount, getTransactions, getOrder, getAccount, createWithdraw, createPayment, finalizeUserOrder
 }

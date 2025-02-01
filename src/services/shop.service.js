@@ -56,6 +56,20 @@ async function getOrder(userId) {
     return LocalSource.getOrder(userId);
 }
 
+export async function finalizeUserOrder(userId, orderId, transactionUuid) {
+    console.log("userId", userId)
+    let response;
+    try {
+        response = await finalizeUserOrderFromLocalSource(userId, orderId, transactionUuid);
+    } catch (err) {
+        response = {error: 1, status: 404, data: 'Erreur réseau, impossible de finaliser la commande'};
+    }
+    return response;
+}
+async function finalizeUserOrderFromLocalSource(userId, orderId, transactionUuid) {
+    return LocalSource.finalizeUserOrder(userId, orderId, transactionUuid);
+}
+
 
 export default {
     shopLogin,

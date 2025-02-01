@@ -134,18 +134,8 @@ const actions = {
         const order = await ShopService.createOrderFromBasket(state.shopUser);
         commit('createOrder', order);
         return order;
-    },
-    async finalizeOrder({state, commit}, orderId) {
-        console.log('shop.js - finalizeOrder');
-        let order = state.shopUser.orders.find(order => order.id === orderId);
-        if (!order) {
-            order = await ShopService.verifyOrder();
-        }
-        if (!order) {
-            throw new Error('Invalid order id');
-        }
-        commit('finalizeOrder', order);
     }
+
 }
 
 const getters = {
