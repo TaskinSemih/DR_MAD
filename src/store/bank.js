@@ -1,7 +1,7 @@
 import BankService from '../services/bankaccount.service'
 
 const state = () => ({
-    accountNumber: '',
+    accountNumber: {}, 
     accountAmount: 0,
     accountTransactions: [],
     accountNumberError: 0,
@@ -13,6 +13,7 @@ const mutations = {
         state.accountAmount = amount
     },
     updateTransactions(state, transactions) {
+        console.log("🔍 Ajout d'une transaction dans Vuex :", transactions);
         state.accountTransactions.push(transactions)
     },
     updateAccountNumberError(state, error) {

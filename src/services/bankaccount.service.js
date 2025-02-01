@@ -63,19 +63,33 @@ async function createWithdraw(id_account, amount) {
 }
 
 async function createPaymentFromLocalSource(id_account, amount, destination) {
-    return LocalSource.createPayment(id_account, amount, destination)
+    console.log("Appel de createPaymentFromLocalSource avec :", id_account, amount, destination);
+    
+    try {
+        let result = await LocalSource.createPayment(id_account, amount, destination);
+        console.log("Réponse LocalSource.createPayment :", result);
+        return result;
+    } catch (err) {
+        console.error("Erreur dans createPaymentFromLocalSource :", err);
+        throw err; // Rejeter l'erreur pour que le catch de `createPayment` la gère
+    }
 }
 
 async function createPayment(id_account, amount, destination) {
+    console.log("Appel de createPayment avec :", id_account, amount, destination);
+
     let response;
     try {
-        response = await createPaymentFromLocalSource(id_account, amount, destination)
+        response = await createPaymentFromLocalSource(id_account, amount, destination);
     } catch (err) {
-        response = {error: 1, status: 404, data: 'erreur réseau, impossible de réaliser le paiement'}
+        console.error("Erreur capturée dans createPayment :", err);
+        response = { error: 1, status: 404, data: "erreur réseau, impossible de réaliser le paiement" };
     }
-    console.log(response)
-    return response
+
+    console.log("Réponse finale de createPayment :", response);
+    return response;
 }
+
 
 export default {
     getAccountAmount, getTransactions, createWithdraw, createPayment, getAccount

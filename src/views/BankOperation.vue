@@ -30,36 +30,45 @@ export default {
     ...mapState({
       account: (state) => state.bank.accountNumber._id,
       balance: (state) => state.bank.accountNumber.amount, // Ajout du solde du compte
+      
     }),
+    
   },
   methods: {
-    ...mapActions(["createPayment", "createWithdraw", "addTransaction"]), // Ajout de addTransaction
+    ...mapActions(["createPayment", "createWithdraw"]), 
     validateOperation() {
-  if (this.amount > this.balance) {
-    alert("Solde insuffisant pour valider l'opération.");
-    return; // Bloque l'opération si le solde est insuffisant
-  }
+      console.log("Contenu Vuex Bank :", this.$store.state.bank);
+      console.log("Account récupéré :", this.account);
+    if (!this.account) {
+        alert("Veuillez sélectionner un compte avant d'effectuer une opération.");
+        return;
+    }
 
-  const transactionData = {
-    id_account: this.account,
-    amount: this.amount,
-    destination: this.isRecipientChecked ? this.recipient : null, // null pour les retraits
-  };
+    if (this.amount > this.balance) {
+        alert("Solde insuffisant pour valider l'opération.");
+        return;
+    }
 
-  const operationType = this.isRecipientChecked ? "createPayment" : "createWithdraw";
+    console.log("Compte source :", this.account);
+    console.log("Montant :", this.amount);
+    console.log("Destinataire :", this.recipient);
+    console.log("isRecipientChecked :", this.isRecipientChecked);
 
-  this[operationType](transactionData).then(() => {
-    alert(this.isRecipientChecked ? "Virement validé" : "Retrait effectué");
-    // this.addTransaction({
-    //   amount: -this.amount, // Montant en négatif pour indiquer un débit
-    //   account: this.account,
-    //   date: new Date().toISOString(),
-    //   destination: this.isRecipientChecked ? this.recipient : null, // null pour un retrait
-    //   type: this.isRecipientChecked ? "virement" : "retrait",
-    // });
-  });
-}
-,
+    const transactionData = {
+        id_account: this.account,
+        amount: this.amount,
+        destination: this.isRecipientChecked ? this.recipient : null,
+    };
+
+    console.log("Données envoyées :", transactionData);
+
+    const operationType = this.isRecipientChecked ? "createPayment" : "createWithdraw";
+
+    this[operationType](transactionData).then(() => {
+        alert(this.isRecipientChecked ? "Virement validé" : "Retrait effectué");
+    }).catch(err => console.error("Erreur lors de l'opération :", err));
+},
+
 
     test() {
       console.log(this.account);

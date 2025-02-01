@@ -72,18 +72,27 @@ function getAccount(number) {
 }
 
 function getTransactions(id_account = null) {
-    console.log("controller.js - getTransactions", id_account);
+    console.log("📥 controller.js - getTransactions | id_account:", id_account);
 
     if (id_account === "" || id_account === undefined || id_account === null) {
         console.warn("⚠ Aucun id_account fourni, récupération de toutes les transactions");
-        return transactions;  // Retourne toutes les transactions si aucun compte spécifique n'est précisé
+        console.log("📜 Liste complète des transactions AVANT retour :", transactions);
+        return transactions;
     }
 
     const res = transactions.filter((trans) => trans.account === id_account || trans.destination === id_account);
-    if (!res.length) return {error: 1, status: 404, data: 'Aucune transaction trouvée pour cet ID de compte'};
+    
+    console.log(`🔎 Recherche des transactions pour id_account: ${id_account}`);
+    console.log("📋 Transactions trouvées :", res);
+
+    if (!res.length) {
+        console.warn("❌ Aucune transaction trouvée pour cet ID de compte :", id_account);
+        return { error: 1, status: 404, data: "Aucune transaction trouvée pour cet ID de compte" };
+    }
 
     return res;
 }
+
 
 
 function createWithdraw(id_account, amount) {
@@ -113,110 +122,203 @@ function createWithdraw(id_account, amount) {
 }
 
 function createPayment(id_account, amount, destination) {
+    console.log("🔄 controller.js - createPayment");
+
+    // Vérification du compte source
+    const account = bankaccounts.find(e => e._id === id_account);
+    if (!account) {
+        console.error("❌ Compte source inexistant !");
+        return { error: 1, status: 404, data: "invalid account id" };
+    }
+
+    // Vérifier si destination est un numéro de compte et récupérer l'ID correspondant
+    const destAccountObj = bankaccounts.find(e => e.number === destination);
+    const destinationId = destAccountObj ? destAccountObj._id : null;
+
+    console.log("✅ Destination trouvée :", destinationId);
+
+    // Vérifier que le compte destination existe avec `_id`
+    const destinationAccount = bankaccounts.find(e => e._id === destinationId);
+    if (!destinationAccount) {
+        console.error("❌ Compte destinataire inexistant !");
+        return { error: 1, status: 404, data: "compte destinataire inexistant" };
+    }
+
+    console.log("📊 Compte source avant transaction :", { _id: account._id, solde: account.amount });
+    console.log("📊 Compte destinataire avant transaction :", { _id: destinationAccount._id, solde: destinationAccount.amount });
+
+    // 🔴 Vérifier si transactions existent
+    if (!account.transactions) {
+        console.warn("⚠️ `account.transactions` est undefined, initialisation...");
+        account.transactions = [];
+    }
+    if (!destinationAccount.transactions) {
+        console.warn("⚠️ `destinationAccount.transactions` est undefined, initialisation...");
+        destinationAccount.transactions = [];
+    }
+
+    // Vérification du solde et du montant
+    if (amount <= 0 || account.amount < amount) {
+        console.error("❌ Montant invalide ou solde insuffisant !");
+        return { error: 1, status: 404, data: "invalid amount or insufficient balance" };
+    }
+
+    console.log("📌 Création des transactions...");
+
     try {
-        console.log("controller.js - createPayment")
-        const account = bankaccounts.find(e => e._id === id_account);
-        console.log("account : " + account)
-        const destinationAccount = bankaccounts.find(e => e._id === destination);
-        console.log("destinationAccount : " + destinationAccount)
-        if (!account) return {error: 1, status: 404, data: 'invalid account id'};
-        if (!destination) return {error: 1, status: 404, data: 'invalid destination'};
-
-        if (amount <= 0 || account.amount < amount) return {
-            error: 1, status: 404, data: 'invalid amount or insufficient balance'
-        };
-
-        const transaction = {
+        // Création des transactions
+        const debitTransaction = {
             _id: uuidv4(),
             amount: -amount,
             account: id_account,
-            destination: destination,
-            date: {"$date": new Date().toISOString()},
+            destination: destinationId,
+            date: { "$date": new Date().toISOString() },
             uuid: uuidv4()
         };
 
-        account.transactions.push(transaction);
+        const creditTransaction = {
+            _id: uuidv4(),
+            amount: amount,
+            account: destinationId,
+            destination: null,
+            date: debitTransaction.date,
+            uuid: uuidv4()
+        };
 
-        account.amount -= Number(amount);
-        destinationAccount.amount += Number(amount);
+        account.transactions.push(debitTransaction);
+        destinationAccount.transactions.push(creditTransaction);
+        transactions.push(debitTransaction, creditTransaction);
+        console.log("📦 Liste ACTUELLE de toutes les transactions enregistrées :", transactions);
 
-        console.log("✅ Nouvelle transaction ajoutée :", transaction);
-        console.log("📜 Transactions après ajout :", transactions.map(t => t.uuid));
 
+        // ✅ Ajout des logs ici, juste après avoir stocké les transactions
+        console.log("💾 Transaction enregistrée (débit) :", debitTransaction);
+        console.log("💾 Transaction enregistrée (crédit) :", creditTransaction);
+        console.log("📦 Liste actuelle des transactions :", bankaccounts.flatMap(acc => acc.transactions || []));
 
-        return {
-            error: 0, status: 200, data: {
-                _id: account._id,
-                uuid: transaction.uuid,
-                amount: amount,
-                destination: destinationAccount.number,
-                date: transaction.date,
-                transaction: transaction
+        // Mise à jour des soldes des comptes
+        account.amount -= amount;
+        destinationAccount.amount += amount;
+
+        console.log("💰 Nouveau solde compte source :", { _id: account._id, solde: account.amount });
+        console.log("💰 Nouveau solde compte destinataire :", { _id: destinationAccount._id, solde: destinationAccount.amount });
+
+        console.log("✅ Transaction de débit enregistrée :", debitTransaction);
+        console.log("✅ Transaction de crédit enregistrée :", creditTransaction);
+
+        console.log("📦 Transactions finales dans le compte source :", account.transactions);
+        console.log("📦 Transactions finales dans le compte destinataire :", destinationAccount.transactions);
+
+        const response = {
+            error: 0,
+            status: 200,
+            data: {
+                uuid: debitTransaction.uuid,
+                amount: account.amount
             }
         };
+
+        console.log("🚀 Réponse finale envoyée :", response);
+        return response;
+
     } catch (error) {
-        console.error('Erreur lors de la création du paiement :', error);
-        return {error: 1, status: 500, data: 'An error occurred while creating the payment'};
+        console.error("🔥 ERREUR SERVEUR :", error);
+        return { error: 1, status: 500, data: "Erreur interne du serveur" };
     }
+
 }
 
 
 function finalizeUserOrder(userId, orderId, transactionUuid) {
+    console.log("🚀 Début de la finalisation de commande...");
 
-    if (!userId) {
-        return {error: 1, status: 404, data: "Aucun ID utilisateur fourni"};
-    }
-    if (!orderId) {
-        return {error: 1, status: 404, data: "Aucun ID de commande fourni"};
-    }
-    if (!transactionUuid) {
-        return {error: 1, status: 404, data: "Aucun UUID de transaction fourni"};
-    }
+    // Vérification des paramètres
+    if (!userId) return { error: 1, status: 404, data: "Aucun ID utilisateur fourni" };
+    if (!orderId) return { error: 1, status: 404, data: "Aucun ID de commande fourni" };
+    if (!transactionUuid) return { error: 1, status: 404, data: "Aucun UUID de transaction fourni" };
 
+    // Recherche de l'utilisateur
     const user = shopusers.find(u => u._id === userId);
-    if (!user) {
-        return {error: 1, status: 404, data: "Utilisateur non trouvé"};
-    }
+    if (!user) return { error: 1, status: 404, data: "Utilisateur non trouvé" };
 
+    // Recherche de la commande
     const order = user.orders?.find(o => o.uuid === orderId);
-    if (!order) {
-        return {error: 1, status: 404, data: "Commande non trouvée"};
-    }
+    if (!order) return { error: 1, status: 404, data: "Commande non trouvée" };
 
-    if (order.status === "finalized") {
-        return {error: 1, status: 400, data: "La commande est déjà finalisée"};
-    }
-    console.log(" controller transactionUuid", transactionUuid)
-    console.log("🔍 Recherche de la transaction...");
-    console.log("🔎 UUID recherché :", transactionUuid);
-    console.log("📜 Liste des transactions disponibles :", transactions.map(t => ({ uuid: t.uuid, _id: t._id, amount: t.amount })));
+    // Vérification de l'état de la commande
+    if (order.status === "finalized") return { error: 1, status: 400, data: "La commande est déjà finalisée" };
 
+    console.log("✅ Vérification de la transaction UUID :", transactionUuid);
 
+    // Récupération de toutes les transactions
     const allTransactions = getTransactions();
-    console.log("📜 Transactions en temps réel :", allTransactions);
+    console.log("📜 Transactions disponibles dans getTransactions():", allTransactions);
 
+    console.log("🔍 Comparaison des transactions en mémoire avec celles dans getTransactions()");
+    console.log("🔎 Transactions en mémoire :", bankaccounts.flatMap(acc => acc.transactions || []));
+    console.log("📜 Transactions disponibles :", allTransactions.map(t => ({
+        uuid: t.uuid,
+        account: t.account,
+        amount: t.amount,
+        destination: t.destination
+    })));
+
+    // Recherche de la transaction par UUID
     const transaction = allTransactions.find(t => t.uuid === transactionUuid);
-    if (!transaction) {
-        return {error: 1, status: 404, data: "Transaction non trouvée"};
+    if (!transaction) return { error: 1, status: 404, data: "Transaction non trouvée" };
+
+    // 🔥 Log pour vérifier la commande complète
+    console.log("🛍️ Commande trouvée :", order);
+
+    // ✅ Vérification dynamique entre `order.total` et `order.amount`
+    const orderTotal = order.total ?? order.amount;  // Si `order.total` est undefined, on prend `order.amount`
+
+    if (!orderTotal) {
+        console.error("⚠️ Erreur : Le total de la commande est introuvable !");
+        return { error: 1, status: 400, data: "Total de la commande introuvable" };
     }
 
-    if (order.total !== Math.abs(transaction.amount)) {
-        return {
-            error: 1, status: 400, data: "Le montant de la transaction ne correspond pas au montant de la commande"
-        };
+    console.log("💰 Total de la commande :", orderTotal);
+    console.log("💳 Montant de la transaction :", Math.abs(transaction.amount));
+
+    if (Number(orderTotal) !== Math.abs(Number(transaction.amount))) {
+        console.error("❌ Erreur : Le montant de la transaction ne correspond pas au montant de la commande !");
+        return { error: 1, status: 400, data: "Le montant de la transaction ne correspond pas au montant de la commande" };
     }
 
+    // Vérification que la transaction concerne bien le compte de la boutique
     const shopAccount = bankaccounts.find(account => account.number === "FRSHOP4578901234567890-0000999");
-    if (transaction.account !== shopAccount._id) {
-        return {
-            error: 1, status: 400, data: "La transaction ne concerne pas le compte de la boutique"
-        };
+
+    console.log("🛒 UUID de la transaction :", transaction.uuid);
+    console.log("🛍️ Compte source de la transaction :", transaction.account);
+    console.log("🏪 Compte de la boutique attendu :", shopAccount?._id);
+
+    if (!shopAccount) {
+        console.error("⚠️ Le compte de la boutique est introuvable !");
+        return { error: 1, status: 404, data: "Le compte de la boutique est introuvable" };
     }
 
-    order.status = "finalized";
+    // 🔴 Vérification que la transaction vient bien du compte client et non de la boutique
+    if (String(transaction.account) === String(shopAccount._id)) {
+        console.error("❌ Erreur : Le paiement ne peut pas provenir du compte de la boutique !");
+        return { error: 1, status: 400, data: "Le paiement ne peut pas provenir du compte de la boutique" };
+    }
 
-    return {error: 0, status: 200, data: "Commande finalisée avec succès"};
+    // 🔴 Vérification que la transaction est bien un débit et non un crédit
+    if (transaction.amount > 0) {
+        console.error("❌ Erreur : La transaction doit être un débit (montant négatif) !");
+        return { error: 1, status: 400, data: "La transaction doit être un débit (montant négatif)" };
+    }
+
+    // Mise à jour du statut de la commande
+    order.status = "finalized";
+    console.log("✅ Commande finalisée avec succès pour l'utilisateur", userId);
+
+    return { error: 0, status: 200, data: "Commande finalisée avec succès" };
 }
+
+
+
 
 export default {
     shopLogin, getAllViruses, getAccountAmount, getTransactions, getOrder, getAccount, createWithdraw, createPayment, finalizeUserOrder

@@ -127,7 +127,7 @@ input:focus {
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #e74c3ced;
 }
 
 .btn:hover {
@@ -135,7 +135,7 @@ input:focus {
 }
 
 .btn-secondary:hover {
-  background-color: #5a6268;
+  background-color: #c0392b;
 }
 
 .btn:disabled {

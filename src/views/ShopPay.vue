@@ -20,7 +20,6 @@
 <script>
 import { finalizeUserOrder } from "@/services/shop.service";
 import { mapState } from "vuex";
-import {shopusers} from "@/datasource/data";
 
 export default {
   props: {
