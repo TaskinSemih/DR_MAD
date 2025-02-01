@@ -105,7 +105,7 @@ function createWithdraw(id_account, amount) {
     };
 
     console.log(transaction)
-    transactions.push(transaction);
+    account.transactions.push(transaction);
 
     account.amount -= amount;
 
