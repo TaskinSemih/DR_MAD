@@ -2,7 +2,7 @@
   <div class="bank-account-container">
     <h1 class="title">Compte en Banque</h1>
 
-    <form @submit.prevent="getAccountCredentials(number)" class="form">
+    <form @submit.prevent="submitAccount" class="form">
       <div class="form-group">
         <label for="account-number">Numéro de compte</label>
         <input
@@ -30,6 +30,8 @@
     <div v-if="account" class="account-info">
       <p>Bonjour {{ account }}</p>
     </div>
+
+
   </div>
 </template>
 
@@ -38,8 +40,12 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "BankAccount",
+  components: {
+    
+  },
   data: () => ({
     number: "",
+    submittedAccountNumber: "" // Ajout du numéro soumis pour le menu
   }),
   computed: {
     ...mapState({
@@ -50,21 +56,32 @@ export default {
       const regex = /^[A-Za-z0-9]{22}-[0-9]{7}$/;
       return regex.test(this.number);
     },
+    menuItems() {
+      return [
+        { type: "button", label: "Mon compte", to: "/mon-compte" },
+        { type: "button", label: "Solde", to: "/solde" },
+        { type: "button", label: "Débit/Virement", to: "/virement" },
+        { type: "button", label: "Historique", to: "/historique" }
+      ];
+    }
   },
   methods: {
     ...mapActions(["getAccount", "resetAccountNumber"]),
     reset() {
       this.number = "";
-
+      this.submittedAccountNumber = ""; // Réinitialise le numéro de compte validé
       this.$store.commit("updateAccountNumberError", 0);
       this.$store.dispatch("resetAccountNumber");
     },
-    getAccountCredentials(number) {
-      this.$store.dispatch("getAccount", number);
-    },
-  },
+    submitAccount() {
+      this.getAccount(this.number);
+      this.submittedAccountNumber = this.number; // Met à jour la variable transmise à VerticalMenu
+    }
+  }
 };
 </script>
+
+
 
 <style scoped>
 .bank-account-container {

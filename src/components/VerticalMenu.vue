@@ -9,7 +9,12 @@
           <template v-if="item.type === 'title'">
             <slot name="menu-title" :label="item.label">{{ item.label }}</slot>
           </template>
-          <button v-else-if="item.type === 'button'" @click="goTo(item.to)">
+          <button
+            v-else-if="item.type === 'button'"
+            @click="goTo(item.to)"
+            :disabled="!isAccountValid && item.label !== 'Mon compte'"
+            :class="{ disabled: !isAccountValid && item.label !== 'Mon compte' }"
+          >
             <slot name="menu-link" :label="item.label">
               {{ item.label }}
             </slot>
@@ -22,17 +27,32 @@
 
 <script>
 export default {
-  name: 'BurgerMenu',
+  name: "VerticalMenu",
   props: {
     items: {
       type: Array,
       required: true
+    },
+    submittedAccountNumber: { // Numéro de compte soumis
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
-      isMenuOpen: false
+      isMenuOpen: false,
+      validAccounts: [ // Liste des numéros de compte valides
+        "FRBADORG78901234567890-0000001",
+        "FRBADORG78901234567890-0000002",
+        "FRDRMAD578901234567890-0000666",
+        "FRSHOP4578901234567890-0000999"
+      ]
     };
+  },
+  computed: {
+    isAccountValid() {
+      return this.validAccounts.includes(this.submittedAccountNumber);
+    }
   },
   methods: {
     toggleMenu() {
@@ -55,15 +75,15 @@ export default {
   background-color: #007bff;
   color: white;
   border: none;
-  width: 50px; /* Largeur légèrement augmentée */
-  height: 50px; /* Taille ajustée */
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
-  border-radius: 4px; /* Ajout d'une bordure arrondie pour plus de style */
+  border-radius: 4px;
 }
 
 .burger-icon:hover {
@@ -79,7 +99,7 @@ export default {
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 150px;
+  width: 180px;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -95,21 +115,30 @@ export default {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 10px;
   text-align: left;
-  text-decoration: none;
   display: block;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  width: 100%;
+  border-radius: 4px;
 }
 
-.vertical-menu button:hover {
-  background-color: #0056b3;
-  transform: translateX(5px);
+/* Désactiver les boutons sauf "Mon compte" */
+.vertical-menu button:disabled {
+  background-color: #d3d3d3;
+  color: #888;
+  cursor: not-allowed;
 }
 
-.menu-fade-enter-active, .menu-fade-leave-active {
+/* Garde "Mon compte" actif */
+.vertical-menu button:not(:disabled) {
+  background-color: #007bff;
+}
+
+.menu-fade-enter-active,
+.menu-fade-leave-active {
   transition: opacity 0.5s, transform 0.5s;
 }
 
