@@ -281,10 +281,13 @@ function finalizeUserOrder(userId, orderId, transactionUuid) {
     console.log("💰 Total de la commande :", orderTotal);
     console.log("💳 Montant de la transaction :", Math.abs(transaction.amount));
 
-    if (Number(orderTotal) !== Math.abs(Number(transaction.amount))) {
-        console.error("❌ Erreur : Le montant de la transaction ne correspond pas au montant de la commande !");
-        return { error: 1, status: 400, data: "Le montant de la transaction ne correspond pas au montant de la commande" };
+    if (Math.abs(Number(transaction.amount)) < Number(orderTotal)) {
+        console.error("❌ Erreur : Le montant de la transaction est insuffisant pour couvrir le montant de la commande !");
+        return { error: 1, status: 400, data: "Le montant de la transaction est insuffisant pour la commande" };
     }
+    
+    console.log("✅ Le montant de la transaction est suffisant pour valider la commande.");
+    
 
     // Vérification que la transaction concerne bien le compte de la boutique
     const shopAccount = bankaccounts.find(account => account.number === "FRSHOP4578901234567890-0000999");
