@@ -38,14 +38,39 @@ async function updateBasket(user, basket) {
 
 async function createOrderFromBasket(shopUser) {
     const uuid = uuidv4();
+
+    // Calcul du montant total en appliquant les promotions
+    const totalAmount = shopUser.basket.items.reduce((acc, item) => {
+        let price = item.item.price;  // Prix de base
+        let quantity = item.amount;
+
+        // Vérifier si des promotions existent
+        if (item.item.promotion && item.item.promotion.length > 0) {
+            let bestDiscount = 0;
+
+            // Parcourir toutes les promotions et trouver la meilleure applicable
+            item.item.promotion.forEach(promo => {
+                if (quantity >= promo.amount) {
+                    bestDiscount = Math.max(bestDiscount, promo.discount);
+                }
+            });
+
+            // Appliquer la meilleure réduction trouvée
+            price = price - (price * (bestDiscount / 100));
+        }
+
+        return acc + (price * quantity);
+    }, 0);
+
     return {
         items: shopUser.basket.items,
         date: new Date(),
-        amount: shopUser.basket.items.reduce((acc, item) => acc + item.amount * item.item.price, 0),
+        amount: Math.round(totalAmount),  // ✅ Arrondi pour éviter les problèmes de virgule
         status: 'waiting_payment',
         uuid: uuid
-    }
+    };
 }
+
 
 async function verifyOrder(orderId, userId) {
     const orders = await LocalSource.getOrder(userId);

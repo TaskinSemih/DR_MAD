@@ -5,7 +5,7 @@
     <div class="orders-list">
       <CheckedList
         :data="orders"
-        :fields="['amount', 'status', 'uuid']"
+        :fields="['amount', 'status', 'uuid', 'date']"
         :itemCheck="false"
         :checked="[]"
         :itemButton="{ show: isStatus, text: 'Acheter' }"
